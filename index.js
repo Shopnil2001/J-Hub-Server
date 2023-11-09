@@ -52,6 +52,8 @@ async function run() {
       const result = await JobCollection.findOne(query);
       res.send(result)
     })
+
+    
     app.put('/jobs/:id',async(req, res)=>{
       const id = req.params.id;
       const filter = {_id : new ObjectId(id)}
@@ -74,16 +76,19 @@ async function run() {
       const result = await JobCollection.updateOne(filter, job, options);
       res.send(result)
     })
+
+
     app.post('/jobs', async(req, res)=>{
       const newJob = req.body;
       
       const result = await JobCollection.insertOne(newJob);
       res.send(result)
     });
+
+
     app.post('/apply', async(req, res)=>{
       const Applicant = req.body;
-      
-      
+
       const result = await ApplyCollection.insertOne(Applicant);
       res.send(result)
     });
@@ -97,10 +102,6 @@ async function run() {
         query ={
           email :req.query.email,
           jobCategory:req.query.jobCategory
-
-              
-            
-            
           }
         }
       
