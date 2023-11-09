@@ -31,7 +31,6 @@ async function run() {
     const JobCollection = client.db('JobHunt').collection('jobs');
     const ApplyCollection = client.db('JobHunt').collection('apply');
 
-
     app.get('/jobs',async(req, res)=>{
       let query ={};
       if(req.query?.loggedInUserEmail){
@@ -53,7 +52,6 @@ async function run() {
       res.send(result)
     })
 
-    
     app.put('/jobs/:id',async(req, res)=>{
       const id = req.params.id;
       const filter = {_id : new ObjectId(id)}
@@ -114,8 +112,7 @@ async function run() {
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
-    // Ensures that the client will close when you finish/error
-    // await client.close();
+   
   }
 }
 run().catch(console.dir);
