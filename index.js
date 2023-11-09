@@ -34,8 +34,8 @@ async function run() {
 
     app.get('/jobs',async(req, res)=>{
       let query ={};
-      if(req.query?.jobCategory){
-        query ={jobCategory :req.query.jobCategory }
+      if(req.query?.loggedInUserEmail){
+        query ={loggedInUserEmail :req.query.loggedInUserEmail }
         
       }
       
@@ -44,13 +44,71 @@ async function run() {
       res.send(result)
     })
 
-    app.get('/jobs/:_id',async(req, res)=>{
-      const id = req.params._id;
+    app.get('/jobs/:id',async(req, res)=>{
+      const id = req.params.id;
       const query = {_id : new ObjectId(id)}
+      console.log(query);
      
       const result = await JobCollection.findOne(query);
       res.send(result)
     })
+    app.put('/jobs/:id',async(req, res)=>{
+      const id = req.params.id;
+      const filter = {_id : new ObjectId(id)}
+      const options ={upsert : true}
+      const updated = req.body;
+      console.log(updated);
+      const job ={
+        $set: {
+           jobTitle :updated.jobTitle,
+           pictureUrl:updated.pictureUrl,
+           salaryRange:updated.salaryRange,
+           jobDescription:updated.jobDescription,
+           jobCategory:updated.jobCategory,
+           loggedInUserEmail:updated.loggedInUserEmail,
+           applicationDeadline:updated.applicationDeadline,
+           jobPostingDate:updated.jobPostingDate,
+           jobApplicantsNumber:updated.jobApplicantsNumber
+        }
+      }
+      const result = await JobCollection.updateOne(filter, job, options);
+      res.send(result)
+    })
+    app.post('/jobs', async(req, res)=>{
+      const newJob = req.body;
+      
+      const result = await JobCollection.insertOne(newJob);
+      res.send(result)
+    });
+    app.post('/apply', async(req, res)=>{
+      const Applicant = req.body;
+      
+      
+      const result = await ApplyCollection.insertOne(Applicant);
+      res.send(result)
+    });
+    app.get('/apply',async(req, res)=>{
+      let query ={};
+      if(req.query?.email){
+           query ={email :req.query.email
+             }
+      }
+      if(req.query?.jobCategory){
+        query ={
+          email :req.query.email,
+          jobCategory:req.query.jobCategory
+
+              
+            
+            
+          }
+        }
+      
+      const cursor = ApplyCollection.find(query)
+      const result = await cursor.toArray();
+      res.send(result)
+    })
+    
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
