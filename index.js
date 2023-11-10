@@ -46,17 +46,7 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result)
     })
-    // app.get('/jobs',async(req, res)=>{
-    //   let query ={};
-    //   if(req.query?.jobCategory){
-    //     query ={
-    //       jobCategory:req.query.jobCategory
-    //       }
-    //     }
-    //   const cursor = JobCollection.find(query)
-    //   const result = await cursor.toArray();
-    //   res.send(result)
-    // })
+    
 
     app.get('/jobs/:id',async(req, res)=>{
       const id = req.params.id;
