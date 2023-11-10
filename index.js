@@ -37,11 +37,26 @@ async function run() {
         query ={loggedInUserEmail :req.query.loggedInUserEmail }
         
       }
-      
+      else if(req.query?.jobCategory){
+        query ={
+          jobCategory:req.query.jobCategory
+          }
+        }
       const cursor = JobCollection.find(query)
       const result = await cursor.toArray();
       res.send(result)
     })
+    // app.get('/jobs',async(req, res)=>{
+    //   let query ={};
+    //   if(req.query?.jobCategory){
+    //     query ={
+    //       jobCategory:req.query.jobCategory
+    //       }
+    //     }
+    //   const cursor = JobCollection.find(query)
+    //   const result = await cursor.toArray();
+    //   res.send(result)
+    // })
 
     app.get('/jobs/:id',async(req, res)=>{
       const id = req.params.id;
@@ -72,6 +87,12 @@ async function run() {
         }
       }
       const result = await JobCollection.updateOne(filter, job, options);
+      res.send(result)
+    })
+    app.delete('/jobs/:id',async(req, res)=>{
+      const id = req.params.id;
+      const query = {_id : new ObjectId(id)}
+      const result = await JobCollection.deleteOne(query );
       res.send(result)
     })
 
